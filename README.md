@@ -74,3 +74,16 @@ grep @HWI 16S.notCombined_1.fastq | awk -F ':' '{print $10}' | sort | uniq -c
    4668 rght3_sum
    1807 rght4_sum
 ```
+##Summer 16S Data Analysis for ESA
+1. seperate samples to individual files
+```
+for i in `grep @HWI /data2/marsh7/160208_miseqrun/16S/16S.extendedFrags.fastq | awk -F ':' '{print $10}' | sort | uniq`; do touch "/data2/marsh7/160208_miseqrun/16S/$i.extnd.fastq"; grep -A 3  $i /data2/marsh7/160208_miseqrun/16S/16S.extendedFrags.fastq | perl -p -e 's/--\n//' >> /data2/marsh7/160208_miseqrun/16S/$i.extnd.fastq; done &
+
+#subsample to lowest number of reads for summer samples - 17930
+for i in `grep @HWI /data2/marsh7/160208_miseqrun/16S/16S.extendedFrags.fastq | awk -F ':' '{print $10}' | sort | uniq | grep sum`; do sort -k1,1 /data2/marsh7/160208_miseqrun/16S/$i.extnd.fastq | head -n $17930 >> /data2/marsh7/160208_miseqrun/16S/$i.17930.fastq; done &
+
+#subsample to lowest number of reads for bioreactor samples - 17930
+for i in `grep @HWI /data2/marsh7/160208_miseqrun/16S/16S.extendedFrags.fastq | awk -F ':' '{print $10}' | sort | uniq | grep R_1`; do sort -k1,1 /data2/marsh7/160208_miseqrun/16S/$i.extnd.fastq | head -n $17930 >> /data2/marsh7/160208_miseqrun/16S/$i.17930.fastq; done &
+
+#create qiime compatible fasta file
+```
